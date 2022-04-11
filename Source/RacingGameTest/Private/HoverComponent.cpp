@@ -46,17 +46,14 @@ void UHoverComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 		FVector SurfaceImpactNormal = OutHit.ImpactNormal;
 		FVector HitLocation = OutHit.Location;
 
-		//UE_LOG(LogTemp, Warning, TEXT("Hit Location: X = %f, Hit Location: Y = %f, Hit Location: Z = %f"),
-		//HitLocation.X, HitLocation.Y, HitLocation.Z);
-
 		// Get Length between hit and component.
 		FVector WorldLocation = (HitLocation - GetComponentLocation());
 		float VectorLength = WorldLocation.Size();
-		//UE_LOG(LogTemp, Warning, TEXT("VectorSize: %f"), VectorSize);
+		
 
 		// Value from 0 - 1.
 		float Alpha = (VectorLength / TraceLength);
-		//UE_LOG(LogTemp, Warning, TEXT("Alpha: %f"), Alpha);
+		
 
 		// Linear interpolation between two values, functions as suspension.
 		float CompressionRatio = FMath::Lerp(HoverForce, 0.f, Alpha);
@@ -65,7 +62,6 @@ void UHoverComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 		// Add force to Component Location
 		FVector Force = (CompressionRatio * SurfaceImpactNormal);
 		MeshComp->AddForceAtLocation(Force, GetComponentLocation());
-		//UE_LOG(LogTemp, Warning, TEXT("Force: X = %f, Force: Y = %f, Force: Z = %f"), Force.X, Force.Y, Force.Z);
 	}
 
 	else
