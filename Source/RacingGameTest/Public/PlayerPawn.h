@@ -61,17 +61,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerVariables")
 		float BoostPower = 10000.f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
-		UHoverComponent* HoverComponentOne = nullptr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
-		UHoverComponent* HoverComponentTwo = nullptr;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
-		UHoverComponent* HoverComponentThree = nullptr;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
-		UHoverComponent* HoverComponentFour = nullptr;
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<AActor> BulletSpawn;

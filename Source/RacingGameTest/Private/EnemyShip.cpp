@@ -3,6 +3,7 @@
 
 #include "EnemyShip.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/FloatingPawnMovement.h"
 #include "AIController.h"
 
 // Sets default values
@@ -19,6 +20,10 @@ AEnemyShip::AEnemyShip()
 	CollisionBox->SetGenerateOverlapEvents(true);
 	CollisionBox->SetupAttachment(EnemyMesh);
 
+	CharacterMovementComponent = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingPawnMovement"));
+
+
+	CharacterMovementComponent->MaxSpeed = 5000.f;
 }
 
 // Called when the game starts or when spawned

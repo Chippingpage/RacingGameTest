@@ -7,6 +7,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/PrimitiveComponent.h"
 #include "Components/BoxComponent.h"
+#include "HoverComponent.h"
 #include "EnemyShip.generated.h"
 
 UCLASS()
@@ -35,6 +36,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyVariables")
 		UStaticMeshComponent* EnemyMesh = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+		class UFloatingPawnMovement* CharacterMovementComponent = nullptr;
 
 	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AI)
 		//class AAIController* AIController{ nullptr };
