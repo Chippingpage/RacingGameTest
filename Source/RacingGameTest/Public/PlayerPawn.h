@@ -54,6 +54,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerVariables")
 		int Ammo = 30;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerVariables")
+		float BoostAmount = 5; // Fuel
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerVariables")
+		float MaxBoostAmount = 5;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerVariables")
+		float BoostPower = 10000.f;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
 		UHoverComponent* HoverComponentOne = nullptr;
 
@@ -89,10 +96,12 @@ private:
 
 	bool bDriving = false;
 	bool bBreaking = false;
+	bool bBoosting = false;
 
 	void MoveRight(float Value);
 	float CurrentTurnSpeed;
 	
+	float RefillTimer;
 
 	void Shooting();
 

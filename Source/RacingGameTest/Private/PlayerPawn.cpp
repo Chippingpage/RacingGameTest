@@ -87,6 +87,29 @@ void APlayerPawn::Tick(float DeltaTime)
 		AddMovementInput(FVector(Forward), (-DriveSpeed/2));
 	}
 
+	if (bBoosting)
+	{
+		BoostAmount -= 0.05f;
+		PlayerMesh->AddForce(Forward * BoostPower * PlayerMesh->GetMass());
+		if (BoostAmount < 0.f)
+		{
+			bBoosting = false;
+		}
+	}
+
+	if (!bBoosting)
+	{
+		RefillTimer += 0.01f;
+		if (RefillTimer >= 1.f)
+		{
+			if (BoostAmount < 5.f)
+			{
+				BoostAmount += 0.01f;
+			}
+		}
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Current BoostFuel: %f"), BoostAmount);
+
 	float MaxDistance = 100.f;
 	FVector EndLocation = GetActorLocation() + (GetActorUpVector() * -MaxDistance);
 	FHitResult HitResult;
@@ -112,8 +135,8 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 	InputComponent->BindAction("Shooting", IE_Pressed, this, &APlayerPawn::Shooting);
 
-	InputComponent->BindAction("Boosting", IE_Pressed, this, &APlayerPawn::StartBoosting);
-	InputComponent->BindAction("Boosting", IE_Released, this, &APlayerPawn::StopBoosting);
+	InputComponent->BindAction("Boost", IE_Pressed, this, &APlayerPawn::StartBoosting);
+	InputComponent->BindAction("Boost", IE_Released, this, &APlayerPawn::StopBoosting);
 
 	InputComponent->BindAxis("MoveRight", this, &APlayerPawn::MoveRight);
 
@@ -151,11 +174,18 @@ void APlayerPawn::StopBreaking()
 
 void APlayerPawn::StartBoosting()
 {
-	
+	if (bCanPlay) {
+		if (BoostAmount > 0)
+		{
+			bBoosting = true;
+		}
+	}
 }
 
 void APlayerPawn::StopBoosting()
 {
+	RefillTimer = 0.f;
+	bBoosting = false;
 }
 
 void APlayerPawn::MoveRight(float Value)

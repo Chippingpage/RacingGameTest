@@ -2,12 +2,22 @@
 
 
 #include "EnemyShip.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "AIController.h"
 
 // Sets default values
 AEnemyShip::AEnemyShip()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+
+	EnemyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("EnemyMesh"));
+	SetRootComponent(EnemyMesh);
+
+	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollider"));
+	CollisionBox->SetGenerateOverlapEvents(true);
+	CollisionBox->SetupAttachment(EnemyMesh);
 
 }
 
@@ -16,6 +26,7 @@ void AEnemyShip::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	//AIController = Cast<AAIController>(GetController());
 }
 
 // Called every frame

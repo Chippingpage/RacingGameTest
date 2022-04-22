@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/PrimitiveComponent.h"
+#include "Components/BoxComponent.h"
 #include "EnemyShip.generated.h"
 
 UCLASS()
@@ -25,5 +28,16 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+public:
+	UPROPERTY(VisibleAnywhere)
+		UShapeComponent* CollisionBox = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyVariables")
+		UStaticMeshComponent* EnemyMesh = nullptr;
+
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AI)
+		//class AAIController* AIController{ nullptr };
+
 
 };
