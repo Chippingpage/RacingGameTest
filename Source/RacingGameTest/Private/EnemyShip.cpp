@@ -4,7 +4,7 @@
 #include "EnemyShip.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
-#include "AIController.h"
+//#include "AIController.h"
 
 // Sets default values
 AEnemyShip::AEnemyShip()

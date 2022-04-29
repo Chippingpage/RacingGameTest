@@ -70,7 +70,7 @@ void UHoverComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	
 	}
 
-	DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, -1, 0, 3);
+	//DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, -1, 0, 3);
 }
 
 
