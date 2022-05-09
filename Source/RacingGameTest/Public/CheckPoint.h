@@ -24,7 +24,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Vehicle")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CheckPointCollisoin")
 		class UBoxComponent* CollisionBox = nullptr;
 
 

@@ -2,9 +2,13 @@
 
 
 #include "EnemyShip.h"
+#include "AIController.h"
+#include "PlayerPawn.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/FloatingPawnMovement.h"
-//#include "AIController.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "Components/SphereComponent.h"
+
 
 // Sets default values
 AEnemyShip::AEnemyShip()
@@ -46,5 +50,9 @@ void AEnemyShip::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void AEnemyShip::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
 }
 

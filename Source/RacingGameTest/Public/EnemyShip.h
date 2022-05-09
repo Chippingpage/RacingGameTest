@@ -40,8 +40,19 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 		class UFloatingPawnMovement* CharacterMovementComponent = nullptr;
 
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AI)
-		//class AAIController* AIController{ nullptr };
+
+	//A sphere that if the Player enters, triggers the NPC to follow Player
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AI)
+		class USphereComponent* PlayerSensingSphere{ nullptr };
+
+	//The Controller for the NCP - similar to the PlayerController
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AI)
+		class AAIController* AIController{ nullptr };
+
+	UFUNCTION()
+		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+			UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex,
+			bool bFromSweep, const FHitResult& SweepResult);
 
 
 };
