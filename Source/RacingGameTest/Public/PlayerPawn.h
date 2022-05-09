@@ -46,6 +46,12 @@ public:
 		UCameraComponent* Camera = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerVariables")
+		USpringArmComponent* BackSpringArm = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerVariables")
+		UCameraComponent* BackCamera = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerVariables")
 		float DriveSpeed = 100.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
@@ -72,6 +78,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "PlayerStats")
 		float LinearDamping;
 
+	UFUNCTION()
+		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+			UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex,
+			bool bFromSweep, const FHitResult& SweepResult);
+
 	bool bCanPlay = false;
 
 private:
@@ -95,6 +106,9 @@ private:
 
 	void Shooting();
 
+	void SwitchCamera();
+	bool bSwitchCamera = false;
 
+	void LoadGame();
 
 };

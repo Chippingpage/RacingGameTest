@@ -12,7 +12,7 @@ UHoverComponent::UHoverComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	TraceLength = 100.f;
-	HoverForce = 50000.f;
+	HoverForce = 100000.f;
 	Gravity = 9.81f;
 }
 
@@ -70,7 +70,7 @@ void UHoverComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	
 	}
 
-	//DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, -1, 0, 3);
+	DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, -1, 0, 3);
 }
 
 

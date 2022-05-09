@@ -3,11 +3,14 @@
 
 #include "PlayerPawn.h"
 #include "Bullet.h"
+#include "CheckPoint.h"
+#include "MainSaveGame.h"
 #include "Components/BoxComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "Components/PrimitiveComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 
 
@@ -39,20 +42,33 @@ APlayerPawn::APlayerPawn()
 	SpringArm->CameraRotationLagSpeed = 3.f;
 	SpringArm->CameraLagMaxDistance = 100.f;
 
+
+	BackSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("BackSpringArm"));
+	BackSpringArm->SetupAttachment(RootComponent);
+	BackSpringArm->TargetArmLength = 1000.f;
+	BackSpringArm->SetRelativeRotation(FRotator(-20.f, 180.f, 0.f));
+	BackSpringArm->bEnableCameraLag = true;
+	BackSpringArm->bEnableCameraRotationLag = true;
+
+	BackSpringArm->bUsePawnControlRotation = false;
+
+	BackSpringArm->CameraLagSpeed = 3.f;
+	BackSpringArm->CameraRotationLagSpeed = 3.f;
+	BackSpringArm->CameraLagMaxDistance = 100.f;
+
 	PlayerMesh->SetSimulatePhysics(true);
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
 	Camera->AddLocalOffset(FVector(0.0f, 0.0f, 60.0f));
 
+	BackCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("BackCamera"));
+	BackCamera->SetupAttachment(BackSpringArm, USpringArmComponent::SocketName);
+	BackCamera->AddLocalOffset(FVector(0.0f, 0.0f, 60.0f));
 
 	PawnMovementComponent = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingPawnMovement"));
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> VehicleMeshComponent(TEXT("StaticMesh'/Game/Models/Player/Ship1.Ship1'"));
-	if (VehicleMeshComponent.Succeeded())
-	{
-		PlayerMesh->SetStaticMesh(VehicleMeshComponent.Object);
-	}
+
 	PawnMovementComponent->MaxSpeed = 5000.f;
 
 	AngularDamping = 5.0f;
@@ -64,6 +80,11 @@ void APlayerPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
+	CollisionBox = this->FindComponentByClass<UBoxComponent>();
+
+	if (CollisionBox) {
+		CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &APlayerPawn::OnOverlap);
+	}
 }
 
 // Called every frame
@@ -108,7 +129,8 @@ void APlayerPawn::Tick(float DeltaTime)
 			}
 		}
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Current BoostFuel: %f"), BoostAmount);
+
+	//UE_LOG(LogTemp, Warning, TEXT("Current BoostFuel: %f"), BoostAmount);
 
 	float MaxDistance = 100.f;
 	FVector EndLocation = GetActorLocation() + (GetActorUpVector() * -MaxDistance);
@@ -140,11 +162,29 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 	InputComponent->BindAxis("MoveRight", this, &APlayerPawn::MoveRight);
 
+	InputComponent->BindAction("SwitchCamera", IE_Pressed, this, &APlayerPawn::SwitchCamera);
+
+	InputComponent->BindAction("LoadGame", IE_Pressed, this, &APlayerPawn::LoadGame);
 }
 
 
 
 
+
+void APlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor->IsA(ACheckPoint::StaticClass()))
+	{
+		UMainSaveGame* MainSaveGamePtr = Cast<UMainSaveGame>(UGameplayStatics::CreateSaveGameObject(UMainSaveGame::StaticClass()));
+		MainSaveGamePtr->PlayerStat.PlayerLocation = GetActorLocation();
+		MainSaveGamePtr->PlayerStat.PlayerRotation = GetActorRotation();
+		UGameplayStatics::SaveGameToSlot(MainSaveGamePtr, MainSaveGamePtr->PlayerName, MainSaveGamePtr->PlayerIndex);
+		UE_LOG(LogTemp, Warning, TEXT(" Game Saved !!! "));
+
+	}
+
+
+}
 
 void APlayerPawn::StartDriving()
 {
@@ -223,6 +263,35 @@ void APlayerPawn::Shooting()
 			UE_LOG(LogTemp, Warning, TEXT("Shooting"));
 		}
 	}
+
+}
+
+void APlayerPawn::SwitchCamera()
+{
+	if (!bSwitchCamera) {
+
+		Camera->Deactivate();
+		BackCamera->Activate();
+
+	}
+	else
+	{
+		Camera->Activate();
+		BackCamera->Deactivate();
+	}
+	bSwitchCamera = !bSwitchCamera;
+}
+
+void APlayerPawn::LoadGame()
+{
+
+	UMainSaveGame* MainLoadGamePtr = Cast<UMainSaveGame>(UGameplayStatics::CreateSaveGameObject(UMainSaveGame::StaticClass()));
+
+	MainLoadGamePtr = Cast<UMainSaveGame>(UGameplayStatics::LoadGameFromSlot(MainLoadGamePtr->PlayerName, MainLoadGamePtr->PlayerIndex));
+
+	SetActorLocation(MainLoadGamePtr->PlayerStat.PlayerLocation);
+	SetActorRotation(MainLoadGamePtr->PlayerStat.PlayerRotation);
+	UE_LOG(LogTemp, Warning, TEXT(" Game Loaded !!! "));
 
 }
 
