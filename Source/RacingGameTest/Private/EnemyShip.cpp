@@ -24,6 +24,10 @@ AEnemyShip::AEnemyShip()
 	CollisionBox->SetGenerateOverlapEvents(true);
 	CollisionBox->SetupAttachment(EnemyMesh);
 
+	PlayerSensingSphere = CreateDefaultSubobject<USphereComponent>(TEXT("PlayerSensingSphere"));
+	PlayerSensingSphere->SetupAttachment(GetRootComponent());
+	PlayerSensingSphere->InitSphereRadius(650.f);
+
 	CharacterMovementComponent = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingPawnMovement"));
 
 
@@ -35,7 +39,9 @@ void AEnemyShip::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	//AIController = Cast<AAIController>(GetController());
+	AIController = Cast<AAIController>(GetController());
+
+	PlayerSensingSphere->OnComponentBeginOverlap.AddDynamic(this, &AEnemyShip::OnOverlap);
 }
 
 // Called every frame
@@ -54,5 +60,10 @@ void AEnemyShip::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 
 void AEnemyShip::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	APlayerPawn* PlayerPawn = Cast<APlayerPawn>(OtherActor);
+	if (PlayerPawn)
+	{
+		AIController->MoveToActor(PlayerPawn, 100);
+	}
 }
 

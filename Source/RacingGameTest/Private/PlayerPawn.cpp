@@ -121,16 +121,17 @@ void APlayerPawn::Tick(float DeltaTime)
 
 
 	UE_LOG(LogTemp, Warning, TEXT("Current BoostFuel: %f"), BoostAmount);
-
-	float MaxDistance = 100.f;
-	FVector EndLocation = GetActorLocation() + (GetActorUpVector() * -MaxDistance);
-	FHitResult HitResult;
-	FCollisionObjectQueryParams CollisionObjectQueryParams;
-	CollisionObjectQueryParams.AddObjectTypesToQuery(ECollisionChannel::ECC_WorldStatic);
-	if (GetWorld()->LineTraceSingleByObjectType(HitResult, GetActorLocation(), EndLocation, CollisionObjectQueryParams))
-	{
-		PlayerMesh->AddForce(GetActorUpVector() * 800.f * PlayerMesh->GetMass());
-		//UE_LOG(LogTemp, Warning, TEXT("Tracer works"));
+	if (bCanPlay) {
+		float MaxDistance = 100.f;
+		FVector EndLocation = GetActorLocation() + (GetActorUpVector() * -MaxDistance);
+		FHitResult HitResult;
+		FCollisionObjectQueryParams CollisionObjectQueryParams;
+		CollisionObjectQueryParams.AddObjectTypesToQuery(ECollisionChannel::ECC_WorldStatic);
+		if (GetWorld()->LineTraceSingleByObjectType(HitResult, GetActorLocation(), EndLocation, CollisionObjectQueryParams))
+		{
+			PlayerMesh->AddForce(GetActorUpVector() * 800.f * PlayerMesh->GetMass());
+			//UE_LOG(LogTemp, Warning, TEXT("Tracer works"));
+		}
 	}
 }
 
