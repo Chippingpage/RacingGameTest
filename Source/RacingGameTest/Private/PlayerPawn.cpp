@@ -118,19 +118,9 @@ void APlayerPawn::Tick(float DeltaTime)
 		}
 	}
 
-	if (!bBoosting)
-	{
-		RefillTimer += 0.01f;
-		if (RefillTimer >= 1.f)
-		{
-			if (BoostAmount < 5.f)
-			{
-				BoostAmount += 0.01f;
-			}
-		}
-	}
 
-	//UE_LOG(LogTemp, Warning, TEXT("Current BoostFuel: %f"), BoostAmount);
+
+	UE_LOG(LogTemp, Warning, TEXT("Current BoostFuel: %f"), BoostAmount);
 
 	float MaxDistance = 100.f;
 	FVector EndLocation = GetActorLocation() + (GetActorUpVector() * -MaxDistance);
