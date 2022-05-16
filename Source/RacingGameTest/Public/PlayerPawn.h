@@ -109,6 +109,7 @@ private:
 	void SwitchCamera();
 	bool bSwitchCamera = false;
 
+	void SaveGame();
 	void LoadGame();
 
 };

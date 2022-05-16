@@ -2,6 +2,7 @@
 
 
 #include "MainSaveGame.h"
+#include "PlayerPawn.h"
 
 UMainSaveGame::UMainSaveGame()
 {

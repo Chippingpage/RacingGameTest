@@ -166,12 +166,7 @@ void APlayerPawn::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Ot
 {
 	if (OtherActor->IsA(ACheckPoint::StaticClass()))
 	{
-		UMainSaveGame* MainSaveGamePtr = Cast<UMainSaveGame>(UGameplayStatics::CreateSaveGameObject(UMainSaveGame::StaticClass()));
-		MainSaveGamePtr->PlayerStat.PlayerLocation = GetActorLocation();
-		MainSaveGamePtr->PlayerStat.PlayerRotation = GetActorRotation();
-		UGameplayStatics::SaveGameToSlot(MainSaveGamePtr, MainSaveGamePtr->PlayerName, MainSaveGamePtr->PlayerIndex);
-		UE_LOG(LogTemp, Warning, TEXT(" Game Saved !!! "));
-
+		SaveGame();
 	}
 
 
@@ -226,7 +221,7 @@ void APlayerPawn::MoveRight(float Value)
 		FVector Forward = GetActorForwardVector();
 		FVector Right = GetActorRightVector();
 
-		// Gir smooth
+		
 		CurrentTurnSpeed = FMath::FInterpTo(CurrentTurnSpeed, Value, GetWorld()->GetDeltaSeconds(), 1.f);
 
 		PlayerMesh->AddRelativeRotation(FRotator(0.f, 3.f, 0.f) * CurrentTurnSpeed);
@@ -273,16 +268,33 @@ void APlayerPawn::SwitchCamera()
 	bSwitchCamera = !bSwitchCamera;
 }
 
+void APlayerPawn::SaveGame()
+{
+
+	
+
+	UMainSaveGame* SaveGameInstance = Cast<UMainSaveGame>(UGameplayStatics::CreateSaveGameObject(UMainSaveGame::StaticClass()));
+
+	SaveGameInstance->PlayerPosition = this->GetActorLocation();
+	SaveGameInstance->PlayerRotation = this ->GetActorRotation();
+	SaveGameInstance->BoostAmountSave = this->BoostAmount;
+
+	UGameplayStatics::SaveGameToSlot(SaveGameInstance, SaveGameInstance->PlayerName, SaveGameInstance->PlayerIndex);
+	UE_LOG(LogTemp, Warning, TEXT("Saved: %s"), *SaveGameInstance->PlayerName);
+}
+
 void APlayerPawn::LoadGame()
 {
 
-	UMainSaveGame* MainLoadGamePtr = Cast<UMainSaveGame>(UGameplayStatics::CreateSaveGameObject(UMainSaveGame::StaticClass()));
+	UMainSaveGame* LoadGameInstance = Cast<UMainSaveGame>(UGameplayStatics::CreateSaveGameObject(UMainSaveGame::StaticClass()));
 
-	MainLoadGamePtr = Cast<UMainSaveGame>(UGameplayStatics::LoadGameFromSlot(MainLoadGamePtr->PlayerName, MainLoadGamePtr->PlayerIndex));
+	LoadGameInstance = Cast<UMainSaveGame>(UGameplayStatics::LoadGameFromSlot(LoadGameInstance->PlayerName, LoadGameInstance->PlayerIndex));
 
-	SetActorLocation(MainLoadGamePtr->PlayerStat.PlayerLocation);
-	SetActorRotation(MainLoadGamePtr->PlayerStat.PlayerRotation);
-	UE_LOG(LogTemp, Warning, TEXT(" Game Loaded !!! "));
+	this->SetActorLocation(LoadGameInstance->PlayerPosition);
+	this->SetActorRotation(LoadGameInstance->PlayerRotation);
+	this->BoostAmount = LoadGameInstance->BoostAmountSave;
+
+	UE_LOG(LogTemp, Warning, TEXT("LOADED: %s"), *LoadGameInstance->PlayerName);
 
 }
 

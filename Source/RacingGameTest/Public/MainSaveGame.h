@@ -10,18 +10,6 @@
  * 
  */
 
-USTRUCT(BlueprintType)
-struct FPlayerStats {
-	GENERATED_BODY()
-public:
-		UPROPERTY(VisibleAnywhere, Category = "SavingData")
-		FVector PlayerLocation;
-	UPROPERTY(VisibleAnywhere, Category = "SavingData")
-		FRotator PlayerRotation;
-
-
-
-};
 
 UCLASS()
 class RACINGGAMETEST_API UMainSaveGame : public USaveGame
@@ -34,6 +22,12 @@ public:
 		FString PlayerName;
 	UPROPERTY(EditAnywhere, Category = "SavingData")
 		int32 PlayerIndex;
-	FPlayerStats PlayerStat;
+	UPROPERTY(EditAnywhere, Category = Basic)
+		FVector PlayerPosition {0.f, 0.f, 0.f};
+	UPROPERTY(EditAnywhere, Category = Basic)
+		FRotator PlayerRotation {0.f, 0.f, 0.f};
+	UPROPERTY(VisibleAnywhere, Category = "SavingData")
+		float BoostAmountSave;
+	
 
 };
