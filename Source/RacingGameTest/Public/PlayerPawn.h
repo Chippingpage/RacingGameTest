@@ -112,4 +112,6 @@ private:
 	void SaveGame();
 	void LoadGame();
 
+	void Pause();
+	bool myGamePaused = false;
 };

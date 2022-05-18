@@ -31,15 +31,9 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 public:
-	UPROPERTY(VisibleAnywhere)
-		UShapeComponent* CollisionBox = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EnemyVariables")
 		UStaticMeshComponent* EnemyMesh = nullptr;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-		class UFloatingPawnMovement* CharacterMovementComponent = nullptr;
-
 
 	//A sphere that if the Player enters, triggers the NPC to follow Player
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = AI)
@@ -54,5 +48,5 @@ public:
 			UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex,
 			bool bFromSweep, const FHitResult& SweepResult);
 
-
+	
 };

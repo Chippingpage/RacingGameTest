@@ -16,22 +16,18 @@ AEnemyShip::AEnemyShip()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-
 	EnemyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("EnemyMesh"));
-	SetRootComponent(EnemyMesh);
-
-	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollider"));
-	CollisionBox->SetGenerateOverlapEvents(true);
-	CollisionBox->SetupAttachment(EnemyMesh);
+	EnemyMesh->SetupAttachment(GetRootComponent());
 
 	PlayerSensingSphere = CreateDefaultSubobject<USphereComponent>(TEXT("PlayerSensingSphere"));
 	PlayerSensingSphere->SetupAttachment(GetRootComponent());
 	PlayerSensingSphere->InitSphereRadius(650.f);
 
-	CharacterMovementComponent = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingPawnMovement"));
 
 
-	CharacterMovementComponent->MaxSpeed = 5000.f;
+	GetCharacterMovement()->MaxAcceleration = 2000.f;
+	GetCharacterMovement()->MaxWalkSpeed = 5000.f;
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
 
 // Called when the game starts or when spawned
@@ -39,7 +35,10 @@ void AEnemyShip::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	AIController = Cast<AAIController>(GetController());
+	if (!AIController)
+	{
+		AIController = Cast<AAIController>(GetController());
+	}
 
 	PlayerSensingSphere->OnComponentBeginOverlap.AddDynamic(this, &AEnemyShip::OnOverlap);
 }
@@ -64,6 +63,7 @@ void AEnemyShip::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Oth
 	if (PlayerPawn)
 	{
 		AIController->MoveToActor(PlayerPawn, 100);
+		UE_LOG(LogTemp, Warning, TEXT("Moving"));
 	}
 }
 

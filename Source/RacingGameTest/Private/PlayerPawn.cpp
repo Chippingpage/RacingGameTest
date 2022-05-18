@@ -120,7 +120,7 @@ void APlayerPawn::Tick(float DeltaTime)
 
 
 
-	UE_LOG(LogTemp, Warning, TEXT("Current BoostFuel: %f"), BoostAmount);
+	//UE_LOG(LogTemp, Warning, TEXT("Current BoostFuel: %f"), BoostAmount);
 	if (bCanPlay) {
 		float MaxDistance = 100.f;
 		FVector EndLocation = GetActorLocation() + (GetActorUpVector() * -MaxDistance);
@@ -156,6 +156,8 @@ void APlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	InputComponent->BindAction("SwitchCamera", IE_Pressed, this, &APlayerPawn::SwitchCamera);
 
 	InputComponent->BindAction("LoadGame", IE_Pressed, this, &APlayerPawn::LoadGame);
+
+	InputComponent->BindAction("Pause", IE_Pressed, this, &APlayerPawn::Pause).bExecuteWhenPaused = true;
 }
 
 
@@ -296,6 +298,20 @@ void APlayerPawn::LoadGame()
 
 	UE_LOG(LogTemp, Warning, TEXT("LOADED: %s"), *LoadGameInstance->PlayerName);
 
+}
+
+void APlayerPawn::Pause()
+{
+	
+	if (!myGamePaused)
+	{
+		UGameplayStatics::SetGamePaused(GetWorld(), false);
+	}
+	else
+	{
+		UGameplayStatics::SetGamePaused(GetWorld(), true);
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Paused"))
 }
 
 
